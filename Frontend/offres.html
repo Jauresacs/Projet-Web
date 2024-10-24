@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Offers</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.1/aos.css">
+    <style>
+        /* Style de la carte d'offre */
+        .job-card {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: relative;
+            transition: transform 0.3s ease;
+            animation: fadeInUp 1s ease-in-out;
+        }
+
+        .job-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Animation pour les cartes d'offre */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Style des titres */
+        .job-card h5 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #007bff;
+            margin-bottom: 10px;
+        }
+
+        /* Style de l'entreprise et de la localisation */
+        .job-card p {
+            font-size: 1.1rem;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        /* Style du salaire */
+        .job-card p:nth-of-type(2) {
+            font-size: 1.3rem;
+            color: #28a745;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        /* Style de la date de publication */
+        .job-card small {
+            font-size: 0.9rem;
+            color: #999;
+        }
+
+        /* Bouton Favoris */
+        .btn-favorite {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: #aaa;
+        }
+
+        .favorited {
+            color: red;
+        }
+
+        /* Style des sections de filtre */
+        .filter-section {
+            margin-bottom: 30px;
+        }
+
+        .filter-label {
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        /* Style des éléments de pagination */
+        .pagination {
+            margin-top: 20px;
+        }
+
+        .page-item.active .page-link {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        .page-link {
+            color: #007bff;
+        }
+
+        .page-link:hover {
+            background-color: #0056b3;
+            color: #fff;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .filter-section {
+                flex-direction: column;
+            }
+
+            .filter-label {
+                margin-top: 10px;
+            }
+        }
+/* Modifier le titre "Job Offers" pour le rendre gras et animé */
+.animated-title {
+    font-weight: 700; /* Plus gras */
+    font-size: 2.5rem;
+    position: relative;
+    display: inline-block;
+    animation: fadeIn 1.5s ease-in-out infinite alternate; /* Animation */
+}
+
+/* Animation pour le titre */
+@keyframes fadeIn {
+    0% { opacity: 0.6; }
+    100% { opacity: 1; }
+}
+
+/* Changer la couleur du texte "Jobs found" en bleu */
+.blue-text {
+    color: #007bff; /* Bleu */
+    font-weight: bold;
+}
+</style>
+</head>
+<body>
+
+<div class="container mt-4">
+    <h1 class="animated-title">Job Offers</h1>
+    <p id="jobCount" class="blue-text">Loading...</p>
+    <button id="returnToDashboard" class="btn btn-outline-primary return-button">
+        Return 
+    </button>
+
+    <div class="row filter-section">
+        <div class="col-md-4">
+            <h5 class="filter-label">Job Category</h5>
+            <select class="form-control" id="jobCategory">
+                <option>All Category</option>
+                <option>Marketing</option>
+                <option>IT</option>
+                <option>Design</option>
+                <option>Sales</option>
+            </select>
+        </div>
+
+        <div class="col-md-4">
+            <h5 class="filter-label">Job Type</h5>
+            <select class="form-control" id="jobType">
+                <option>All-Types</option>
+                <option>Full-Time</option>
+                <option>Part-Time</option>
+                <option>Remote</option>
+                <option>Freelance</option>
+            </select>
+        </div>
+
+        <div class="col-md-4">
+            <h5 class="filter-label">Job Location</h5>
+            <input type="text" class="form-control" id="jobLocation" placeholder="Type location..." autocomplete="off">
+        </div>
+    </div>
+
+    <div id="job-list" class="list-group">
+        <!-- Les offres seront ajoutées ici dynamiquement avec JavaScript -->
+    </div>
+
+<!-- Pagination -->
+<nav aria-label="Page navigation">
+    <ul class="pagination justify-content-center" id="pagination">
+        <!-- La pagination sera générée ici de manière dynamique en suivant le js -->
+    </ul>
+</nav>
+
+<div class="modal fade" id="jobDetailsModal" tabindex="-1" role="dialog" aria-labelledby="jobDetailsLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="jobDetailsLabel">Job Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h5 id="jobTitle"></h5>
+                <p><strong>Company:</strong> <span id="jobCompany"></span></p>
+                <p><strong>Category:</strong> <span id="jobCategoryModal"></span></p>
+                <p><strong>Job Type:</strong> <span id="jobTypeModal"></span></p>
+                <p><strong>Location:</strong> <span id="jobLocationDetails"></span></p>
+                <p><strong>Salary:</strong> <span id="jobSalary"></span></p>
+                <p><strong>Posted:</strong> <span id="jobPosted"></span></p>
+                <p id="jobDescription"></p>
+                <button id="applyButton" class="btn btn-success mt-3">Apply for this Job</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modale pour la candidature -->
+<div class="modal fade" id="applyModal" tabindex="-1" role="dialog" aria-labelledby="applyModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="applyModalLabel">Apply for Job</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="applyForm">
+          <div class="form-group">
+            <label for="applicantName">Your Name</label>
+            <input type="text" class="form-control" id="applicantName" required>
+          </div>
+          <div class="form-group">
+            <label for="applicantEmail">Your Email</label>
+            <input type="email" class="form-control" id="applicantEmail" required>
+          </div>
+          <div class="form-group">
+            <label for="applicantNumber">Your number</label>
+            <input type="text" class="form-control" id="applicantNumber" required>
+          </div>
+          <div class="form-group">
+            <label for="applicantMessage">Your message</label>
+            <input type="text" class="form-control" id="applicantMessage" required>
+          </div>
+          <!-- <div class="form-group">
+            <label for="coverLetter">Upload your Cover Letter</label>
+            <input type="file" class="form-control-file" id="coverLetter" name="coverLetter" required>
+          </div> -->
+  
+          <!-- <div class="form-group">
+            <label for="resume">Upload your CV</label>
+            <input type="file" class="form-control-file" id="resume" name="resume" required>
+          </div> -->
+          <button type="submit" class="btn btn-primary">Submit Application</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.1/aos.js"></script>
+<script>
+    $(document).ready(function() {
+        AOS.init();
+    
+        let jobOffers = []; // Liste des offres d'emploi
+        const jobsPerPage = 3;
+        let currentPage = 1;
+        let filteredJobs = []; // Liste filtrée initialement vide
+    
+        // Charger les favoris à partir du localStorage
+        let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+    
+        // Fonction pour récupérer les offres d'emploi via Fetch API
+        function fetchJobOffers() {
+            fetch('http://localhost:5027/Jobs/GetAllOffers')
+                .then(response => response.json())
+                .then(data => {
+                    jobOffers = data;
+                    filteredJobs = jobOffers.slice();
+                    paginateJobs();
+                })
+                .catch(error => {
+                    console.error('Il y a eu un problème avec la requête Fetch:', error);
+                });
+        }
+    
+        // Fonction d'affichage des jobs avec gestion des favoris
+        function displayJobs(jobs) {
+    $('#job-list').empty();
+    jobs.forEach(job => {
+        const isFavorited = favorites.some(fav => fav.id === job.id);
+        const favoriteClass = isFavorited ? 'btn-danger' : 'btn-outline-danger';
+
+        $('#job-list').append(`
+            <a href="#" class="list-group-item job-card" data-aos="fade-up" data-id="${job.id}">
+                <h5>${job.title}</h5>
+                <p>${job.companyName} - ${job.location}</p>
+                <p>${job.salary} €</p>
+                <small>Posté le ${new Date(job.postedDate).toLocaleDateString()}</small>
+            </a>
+        `);
+    });
+}
+
+    
+        // Fonction de gestion de la pagination et du rendu dynamique des boutons
+        function generatePagination() {
+            const totalPages = Math.ceil(filteredJobs.length / jobsPerPage);
+            $('#pagination').empty();
+    
+            if (totalPages > 1) {
+                $('#pagination').append(`
+                    <li class="page-item ${currentPage === 1 ? 'disabled' : ''}" id="prevPage">
+                        <a class="page-link" href="#" aria-label="Previous">&laquo;</a>
+                    </li>
+                `);
+    
+                for (let i = 1; i <= totalPages; i++) {
+                    $('#pagination').append(`
+                        <li class="page-item ${currentPage === i ? 'active' : ''}" data-page="${i}">
+                            <a class="page-link" href="#">${i}</a>
+                        </li>
+                    `);
+                }
+    
+                $('#pagination').append(`
+                    <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}" id="nextPage">
+                        <a class="page-link" href="#" aria-label="Next">&raquo;</a>
+                    </li>
+                `);
+            }
+        }
+    
+        // Fonction de gestion de la pagination
+        function paginateJobs() {
+            const start = (currentPage - 1) * jobsPerPage;
+            const end = start + jobsPerPage;
+            const paginatedJobs = filteredJobs.slice(start, end);
+            displayJobs(paginatedJobs);
+    
+            $('#jobCount').text(`${filteredJobs.length} Jobs found`);
+            generatePagination();
+        }
+    
+        // Fonction de gestion des filtres
+        function applyFilters() {
+            const selectedCategory = $('#jobCategory').val();
+            const selectedType = $('#jobType').val();
+            const selectedLocation = $('#jobLocation').val().toLowerCase();
+    
+            filteredJobs = jobOffers.slice();
+    
+            // Appliquer les filtres
+            if (selectedCategory !== "All Category") {
+                filteredJobs = filteredJobs.filter(job => job.category === selectedCategory);
+            }
+            if (selectedType !== "All Types") {
+                filteredJobs = filteredJobs.filter(job => job.type === selectedType);
+            }
+            if (selectedLocation !== "") {
+                filteredJobs = filteredJobs.filter(job => job.location.toLowerCase().includes(selectedLocation));
+            }
+    
+            currentPage = 1;
+            paginateJobs();
+        }
+    
+        // Gestion des événements de changement sur les filtres
+        $('#jobCategory, #jobType, #jobLocation').on('change', function() {
+            applyFilters();
+        });
+
+    
+        // Gestion de la pagination (Précédent/Suivant)
+        $(document).on('click', '#prevPage, #nextPage', function(e) {
+            e.preventDefault();
+            const totalPages = Math.ceil(filteredJobs.length / jobsPerPage);
+    
+            if ($(this).attr('id') === 'prevPage' && currentPage > 1) {
+                currentPage--;
+            } else if ($(this).attr('id') === 'nextPage' && currentPage < totalPages) {
+                currentPage++;
+            }
+            paginateJobs();
+            scrollToTop();
+        });
+    
+        // Changement de page en cliquant sur un numéro
+        $(document).on('click', '.page-item[data-page]', function(e) {
+            e.preventDefault();
+            currentPage = $(this).data('page');
+            paginateJobs();
+            scrollToTop();
+        });
+
+        $(document).on('click', '.btn-favorite', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const jobId = $(this).data('id');
+    // Vérifiez que `jobId` existe bien
+    console.log("Job ID:", jobId);
+
+    // Exécutez la logique d'ajout ou de suppression des favoris
+    addToFavorites(jobId);
+});
+function addToFavorites(jobId) {
+    fetch(`http://localhost:5027/FavoriteOffers/addfavorite/${jobId}`, {
+        method: 'POST',
+        headers: {
+            'Authorization': 'Bearer ' + localStorage.getItem('authToken'),
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Offer added to favorites:', data);
+    })
+    .catch(error => {
+        console.error('Error adding to favorites:', error);
+    });
+}
+
+    
+        // Affichage des détails de l'offre
+        $(document).on('click', '.job-card', function(e) {
+            e.preventDefault();
+            const offerId = $(this).data('id');
+            const job = jobOffers.find(job => job.id === offerId);
+    
+            $('#jobTitle').text(job.title);
+            $('#jobCompany').text(job.companyName);
+            $('#jobLocationDetails').text(job.location);
+            $('#jobSalary').text(job.salary);
+            $('#jobPosted').text(job.postedDate);
+            $('#jobDescription').text(job.description);
+            $('#jobCategoryModal').text(job.category); 
+            $('#jobTypeModal').text(job.jobType);
+
+            $('#applyButton').data('offer-id', offerId);
+    
+            $('#jobDetailsModal').modal('show');
+        });
+        // Appel initial de la fonction de récupération des offres d'emploi
+        fetchJobOffers();
+        
+        // Script pour le bouton retour
+        document.getElementById('returnToDashboard').addEventListener('click', function() {
+            const userRole = localStorage.getItem('userRole');
+            console.log(userRole)
+            if (userRole === 'recruiter') {
+                window.location.href = 'dashboard_recruiter.html';
+            } else if (userRole === 'candidate') {
+                window.location.href = 'dashboard_candidate.html';
+            } else {
+                window.location.href = 'Index.html';
+            }
+        });    
+    
+        // Ouvrir le modal de candidature
+        $('#applyButton').click(function() {
+            $('#applyModal').modal('show');
+        });
+    
+        // Soumettre le formulaire de candidature
+        $('#applyForm').on('submit', function(e) {
+            e.preventDefault();
+            const applicantName = document.getElementById("applicantName").value;
+            const applicantEmail = document.getElementById("applicantEmail").value;
+            const applicantNumber = document.getElementById("applicantNumber").value;
+            const applicantMessage = document.getElementById("applicantMessage").value;
+            const offerId = $('#applyButton').data('offer-id');
+            alert("Your application has been submitted!");
+            $('#applyForm')[0].reset(); 
+            $('#applyModal').modal('hide');
+
+            console.log(offerId);
+        
+            // Envoyer la candidature via Fetch API
+            fetch(`http://localhost:5027/Candidats/ApplyJob/${offerId}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + localStorage.getItem('authToken')
+        },
+        body: JSON.stringify({
+            jobId: offerId,  // ID de l'offre à laquelle l'utilisateur postule
+            applicantName: applicantName,
+            applicantEmail: applicantEmail,
+            applicantNumber: applicantNumber,
+            applicantMessage: applicantMessage
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Candidature soumise:', data);
+        $('#applyModal').modal('hide');
+        alert('Votre candidature a été soumise avec succès !');
+    })
+    .catch(error => {
+        console.error('Erreur lors de la soumission de la candidature:', error);
+        alert('Une erreur est survenue lors de la soumission de votre candidature.');
+    });
+    });
+});
+</script>
+</body>
+</html>

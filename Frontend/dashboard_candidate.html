@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Candidate Dashboard</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cssanimation.io/css/library.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/hover.css/2.3.1/css/hover-min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            /* Couleurs pour le mode clair */
+            --background-color: #ffffff;
+            --text-color: #333333;
+            --card-bg-color: #f9f9f9;
+            --primary-color: #007bff;
+            --accent-color: #28a745;
+        }
+
+        .dark-mode {
+            /* Couleurs pour le mode sombre */
+            --background-color: #121212;
+            --text-color: #f1f1f1;
+            --card-bg-color: #1e1e1e;
+            --primary-color: #0066ff;
+            --accent-color: #03dac6;
+        }
+
+        /* Appliquer les couleurs */
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+
+        .job-card {
+            background-color: var(--card-bg-color);
+            color: var(--text-color);
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--accent-color);
+        }
+         /* Style pour le mode sombre */
+         #darkModeToggle {
+            border: 1px solid #343a40;
+            color: #343a40;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        #darkModeToggle:hover {
+            background-color: #343a40;
+            color: #fff;
+        }
+
+        .navbar .btn {
+            margin-left: 10px;
+        }
+        /* Style pour le texte animé "Welcome" */
+        .animated-title {
+            font-weight: 700;
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeIn 1.5s ease-in-out infinite alternate;
+        }
+
+        /* Espacement ajouté au-dessus du titre */
+        h1.animated-title {
+            margin-top: 60px;
+        }
+
+        /* Animation pour le titre */
+        @keyframes fadeIn {
+            0% { opacity: 0.6; }
+            100% { opacity: 1; }
+        }
+
+        /* Centrage et animation des titres des boîtes */
+        .box h4 {
+            text-align: center;
+            color: #007bff;
+            animation: leWaterWave 0.5s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        /* Conteneur principal pour les boîtes */
+        .dashboard-container {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 60px;
+            height: auto;
+        }
+
+        /* Style des boîtes avec gradient animé et effet de débordement d'énergie */
+        .box {
+            background: linear-gradient(45deg, #fefdfe, #cddbf3);
+            background-size: 400% 400%;
+            animation: gradientBackground 8s ease infinite;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            flex: 1;
+            max-width: 28%;
+            min-height: 270px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+        /* Animation de gradient pour les boîtes */
+        @keyframes gradientBackground {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Effet de débordement d'énergie */
+        .box::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 20px;
+            padding: 2px;
+            background: linear-gradient(45deg, #0e0e0e, #0364dc);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask-composite: exclude;
+            transition: opacity 0.5s ease;
+            opacity: 0;
+        }
+
+        .box:hover::before {
+            opacity: 1;
+        }
+
+        /* Animation pour les boîtes */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .box {
+            animation: fadeInUp 0.8s ease-in-out;
+        }
+
+        /* Animation Water Wave */
+        @keyframes leWaterWave {
+            50% { 
+                transform: skewY(1deg) skewX(-1deg) scale(1.06); 
+            }
+        }
+
+        .water-wave {
+            display: inline-block;
+            animation: leWaterWave 0.5s linear infinite;
+        }
+
+        /* Ajustement des éléments dans la section Overview */
+        .overview-box ul {
+            list-style: none;
+            padding: 0;
+            text-align: left;
+            margin-top: 10px;
+        }
+
+        .overview-box ul li {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .overview-box ul li strong {
+            flex-shrink: 0;
+        }
+
+        .overview-box ul li span {
+            flex-grow: 1;
+            text-align: right;
+        }
+
+        /* Style des boutons avec icônes */
+        .btn i {
+            margin-right: 8px;
+            font-size: 1.2rem;
+            vertical-align: middle;
+        }
+
+        /* Assurer que l’icône et le texte soient centrés */
+        .btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Effet hover pour les boutons */
+        .btn-primary:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+
+        /* Ajustement pour espacement */
+        .box ul li strong::after {
+            content: " ";
+            margin-right: 5px;
+        }
+
+        /* Remettre la couleur des icônes en bleu */
+        .box i {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: #007bff;
+        }
+        /* Style des boîtes avec gradient animé et débordement d'énergie */
+.box {
+    background: linear-gradient(45deg, #fefdfe, #73a2f5);
+    background-size: 400% 400%;
+    animation: gradientBackground 8s ease infinite;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    flex: 1;
+    max-width: 28%;
+    min-height: 270px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative; /* Nécessaire pour l’effet */
+    z-index: 1;
+}
+
+/* Effet de débordement animé continu */
+.box::before {
+    content: "";
+    position: absolute;
+    top: 0; 
+    left: 0; 
+    right: 0; 
+    bottom: 0;
+    border-radius: 20px;
+    background: linear-gradient(45deg, #101010, #f9f9f9, #007bff, #00b3ff);
+    background-size: 200% 200%;
+    z-index: -1;
+    animation: borderFlow 3s linear infinite;
+}
+
+/* Animation de déplacement du gradient */
+@keyframes borderFlow {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* Animation de gradient pour les boîtes */
+@keyframes gradientBackground {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+/* Ajout d'un gradient animé pour les icônes */
+.box i {
+    font-size: 2rem;
+    margin-bottom: 10px;
+    background: linear-gradient(45deg, #0084ff, #2b2b2b, #049ff3, #060606);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent; /* Rendre le texte (ici l'icône) transparent pour voir le gradient */
+    background-size: 200% 200%;
+    animation: iconGradient 3s linear infinite;
+}
+
+/* Animation du gradient pour les icônes */
+@keyframes iconGradient {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+nav {
+    display: flex;
+    justify-content: space-around;
+    margin: 20px 0;
+    border-radius: 10px;
+    padding: 10px;
+    }
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+nav a {
+    position: relative;
+    font-size: 1.2rem;
+    color: #000;
+    text-decoration: none;
+    padding: 10px 15px;
+    background: linear-gradient(45deg, #000000, #00a6ff);
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    transition: background-position 0.5s, background-color 0.3s;
+}
+
+nav a::before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: rgba(0, 123, 255, 0.1);
+    border-radius: 5px;
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.3s, background-color 0.3s;
+}
+
+nav a:hover::before {
+    opacity: 1;
+    background-color: rgba(0, 123, 255, 0.2);
+}
+
+nav a i {
+    margin-right: 8px;
+    transition: transform 0.5s;
+}
+
+nav a:hover i {
+    transform: rotate(360deg);
+}
+/* Pour les téléphones (portrait et paysage) */
+@media only screen and (max-width: 767px) {
+    /* Ajuster les éléments pour les petits écrans */
+    .dashboard-container {
+        flex-direction: column; /* Pour empiler les boîtes en colonne */
+        gap: 20px; /* Plus d'espace entre les boîtes */
+    }
+
+    .box {
+        max-width: 100%; /* Prendre toute la largeur de l'écran */
+        padding: 20px; /* Réduire le padding */
+    }
+
+    nav {
+        flex-direction: column; /* Empiler les liens du menu */
+        text-align: center;
+    }
+
+    nav a {
+        padding: 8px 10px; /* Réduire la taille des liens de navigation */
+        font-size: 1rem;
+    }
+}
+
+/* Styles pour les tablettes */
+@media (min-width: 768px) and (max-width: 1024px) {
+    .dashboard-container .box {
+      flex: 0 0 90%; /* Pour donner plus d'espace aux boîtes sur les tablettes */
+      max-width: 90%;
+      margin: 20px auto; /* Centrer les boîtes */
+    }
+  }
+
+.page-section {
+    display: none;
+}
+.page-section.active {
+    display: block;
+}
+/* Style de la carte d'offre */
+.job-card {
+    margin-bottom: 20px;
+    padding: 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    position: relative;
+    transition: transform 0.3s ease;
+    animation: fadeInUp 1s ease-in-out;
+}
+
+.job-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Animation pour les cartes d'offre */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Style des titres des offres */
+.job-card h5 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #007bff;
+    margin-bottom: 10px;
+}
+
+/* Style de l'entreprise et de la localisation */
+.job-card p {
+    font-size: 1.1rem;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+/* Style du salaire */
+.job-card p:nth-of-type(2) {
+    font-size: 1.3rem;
+    color: #28a745;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+/* Style de la date de publication */
+.job-card small {
+    font-size: 0.9rem;
+    color: #999;
+}
+
+/* Bouton pour les favoris (ajout ou suppression) */
+.btn-favorite {
+    position: absolute;
+    top: 10px;
+    right: 50px; /* Ajustement pour éviter la collision avec le bouton delete */
+    color: #aaa;
+}
+
+.favorited {
+    color: red;
+}
+
+/* Bouton pour la suppression */
+.delete-container {
+    text-align: right; /* Aligner le bouton à droite */
+    margin-top: -10px; /* Optionnel, ajuste selon tes besoins */
+}
+
+.delete-offer {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px; /* Espace entre l'icône et le texte */
+}
+
+.delete-offer i {
+    font-size: 1rem; /* Taille de l'icône */
+}
+
+.delete-offer:hover {
+    background-color: #b92b3a;
+}
+
+/* Style des éléments de pagination */
+.pagination {
+    margin-top: 20px;
+}
+
+.page-item.active .page-link {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.page-link {
+    color: #007bff;
+}
+
+.page-link:hover {
+    background-color: #0056b3;
+    color: #fff;
+}
+
+/* Modal pour les détails de l'offre */
+.modal-header {
+    background-color: #007bff;
+    color: white;
+}
+
+.modal-title {
+    font-weight: bold;
+}
+
+.modal-body h5 {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #007bff;
+    margin-bottom: 10px;
+}
+
+.modal-body p {
+    font-size: 1.1rem;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.modal-body button {
+    background-color: #28a745;
+    color: white;
+}
+
+/* Styles du modal pour postuler */
+#applyModal .modal-header {
+    background-color: #28a745;
+    color: white;
+}
+
+#applyModal .modal-body label {
+    font-weight: bold;
+}
+
+#applyModal .modal-body input,
+#applyModal .modal-body button {
+    margin-bottom: 10px;
+}
+
+#applyModal .modal-body button {
+    background-color: #007bff;
+    color: white;
+}
+/* Style de la liste des activités récentes */
+#recent-activities {
+    list-style-type: none;
+    padding: 0;
+}
+
+#recent-activities li {
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+    font-size: 0.9rem;
+    color: #333;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Style pour une activité de connexion */
+.activity-login {
+    color: #28a745; /* Vert pour les connexions */
+    font-weight: bold;
+}
+
+/* Style pour une activité de déconnexion */
+.activity-logout {
+    color: #dc3545; /* Rouge pour les déconnexions */
+    font-weight: bold;
+}
+
+/* Ajout de marges entre les champs du modal */
+.modal-body .form-control {
+    margin-bottom: 15px;
+}
+</style>
+</head>
+<body>
+    <div class="container-fluid">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="#">Job Board</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#dashboard-section">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#my-favorite-offers-section">My Favorite Offers</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#my-applications-section">My Applications</a>
+                    </li>
+                </ul>
+                <button class="btn btn-outline-primary my-2 my-sm-0 mr-2 hvr-grow" id="jobOffersBtn">
+                    <i class="fas fa-briefcase"></i> Job Offers
+                </button>             
+               <button id="darkModeToggle" class="btn btn-outline-dark my-2 my-sm-0 mr-2 hvr-grow">
+                    <i class="fas fa-adjust"></i> Dark Mode
+                </button>
+                <button class="btn btn-outline-primary my-2 my-sm-0 mr-2 hvr-grow" data-toggle="modal" data-target="#editLoginModal"><i class="fas fa-user-edit"></i> Edit Login</button>
+                <button class="btn btn-outline-danger my-2 my-sm-0 hvr-wobble-vertical" id="logout"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            </div>
+        </nav>
+
+        <h1 class="animated-title animate__animated animate__bounceIn">Welcome to Your Dashboard</h1>
+
+        <div id="dashboard-section" class="page-section active">
+            <div class="dashboard-container" data-aos="fade-up">
+                <!-- Boîte Summary -->
+                <div class="box hvr-grow">
+                    <i class="fas fa-user"></i>
+                    <h4 class="water-wave">Summary</h4>
+                    <p><strong>Name:</strong> <span id="summaryName"></span></p>
+                    <p><strong>Email:</strong> <span id="summaryEmail"></span></p>
+                    <!-- <p><strong>Occupation:</strong> <span id="summaryOccupation"></span></p> -->
+                    <button class="btn btn-primary mt-2 hvr-wobble-horizontal" id="editInfoBtn" data-toggle="modal" data-target="#editInfoModal">Edit Information</button>
+                </div>
+
+                <!-- Boîte Overview -->
+                <div class="box hvr-grow">
+                    <i class="fas fa-chart-line"></i>
+                    <h4 class="water-wave">Overview</h4>
+                    <ul>
+                        <li><strong>Applications Submitted:</strong> <span id="applications-count">0</span></li>
+                        <li><strong>Favorite Offers:</strong> <span id="favorite-count">0</span></li>
+                    </ul>
+                </div>
+
+                <!-- Boîte Recent Activities -->
+                <div class="box hvr-grow">
+                    <i class="fas fa-bell"></i>
+                    <h4 class="water-wave">Recent Activities</h4>
+                    <div id="recent-activities">
+                        <p>No recent activities to show</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section My Favorite Offers -->
+        <div id="my-favorite-offers-section" class="page-section"></div>
+
+        <!-- Section My Applications -->
+        <div id="my-applications-section" class="page-section"></div>
+
+        <!-- Modal pour les détails de l'offre -->
+        <div class="modal fade" id="jobDetailsModal" tabindex="-1" role="dialog" aria-labelledby="jobDetailsLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="jobDetailsLabel">Job Details</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <h5 id="jobTitle">Job Title</h5>
+                        <p><strong>Company:</strong> <span id="jobCompany"></span>, <span id="jobLocationDetails"></span></p>
+                        <p><strong>Category:</strong> <span id="jobCategoryModal">Category</span></p>
+                        <p><strong>Job Type:</strong> <span id="jobTypeModal">Job Type</span></p>
+                        <p><strong>Salary:</strong> <span id="jobSalary">Salary</span></p>
+                        <p><strong>Posted:</strong> <span id="jobPosted">Posted Date</span></p>
+                        <p id="jobDescription">Complete job description here.</p>
+                        <button id="applyButton" class="btn btn-success mt-3" data-toggle="modal" data-target="#applyModal">Apply for this job</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal to apply for a job -->
+        <div class="modal fade" id="applyModal" tabindex="-1" role="dialog" aria-labelledby="applyModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="applyModalLabel">Apply for Job</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="applyForm">
+                            <div class="form-group">
+                                <label for="applicantName">Your Name</label>
+                                <input type="text" class="form-control" id="applicantName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="applicantEmail">Your Email</label>
+                                <input type="email" class="form-control" id="applicantEmail" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="coverLetter">Upload Your Cover Letter</label>
+                                <input type="file" class="form-control-file" id="coverLetter" name="coverLetter" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="resume">Upload Your Resume</label>
+                                <input type="file" class="form-control-file" id="resume" name="resume" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Submit Application</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal pour Edit Information -->
+        <div class="modal fade" id="editInfoModal" tabindex="-1" aria-labelledby="editInfoModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editInfoModalLabel">Edit Your Information</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="text" class="form-control editable-info" id="userName" placeholder="Enter your name" value="John Legend">
+                        <input type="email" class="form-control editable-info" id="userEmail" placeholder="Enter your email" value="john.doe@example.com">
+                        <!-- <input type="text" class="form-control editable-info" id="userOccupation" placeholder="Enter your occupation" value="Software Engineer"> -->
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" id="saveInfo">Save Information</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="editLoginModal" tabindex="-1" aria-labelledby="editLoginModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editLoginModalLabel">Edit Login Information</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="editLoginForm">
+                            <div class="form-group">
+                                <label for="oldPassword">Old Password</label>
+                                <input type="password" class="form-control" id="oldPassword" placeholder="Enter your old password" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="newPassword">New Password</label>
+                                <input type="password" class="form-control" id="newPassword" placeholder="Enter your new password" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="confirmPassword">Confirm Password</label>
+                                <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm your new password" required>
+                            </div>
+                            <button type="button" class="btn btn-primary" id="saveLogin">Save Changes</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Modal for Edit Login -->
+<!-- <div class="modal fade" id="editLoginModal" tabindex="-1" aria-labelledby="editLoginModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editLoginModalLabel">Edit Login Information</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editLoginForm">
+                    <div class="form-group">
+                        <label for="loginEmail">New Email Address</label>
+                        <input type="email" class="form-control" id="loginEmail" placeholder="Enter your new email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">New Password</label>
+                        <input type="password" class="form-control" id="loginPassword" placeholder="Enter your new password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirm Password</label>
+                        <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm your new password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="saveLogin">Save Changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div> -->
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5.7/lib/darkmode-js.min.js"></script>
+<script>
+    AOS.init();
+
+    $(document).ready(function() {
+        // Vérification du rôle de l'utilisateur pour le candidat
+    const userRole = localStorage.getItem('userRole');
+    if (userRole !== 'candidate') {
+        window.location.href = 'index.html';
+    }
+
+ // Fonction pour récupérer et afficher les informations du candidat
+function loadCandidateInfo() {
+    // Récupérer les informations du candidat depuis le serveur
+    fetch('http://localhost:5027/Users/GetUser', {
+        method: 'GET',
+        headers: {
+            'Authorization': 'Bearer ' + localStorage.getItem('authToken')
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Injecter les informations du candidat dans la boîte Summary
+        $('#summaryName').text(data.nom);
+        $('#summaryEmail').text(data.email);
+        // $('#summaryOccupation').text(data.occupation || 'N/A');
+    })
+    .catch(error => console.error('Erreur lors de la récupération des informations du candidat:', error));
+}
+
+loadCandidateInfo();
+
+// Sauvegarde des informations modifiées dans le modal "Edit Information"
+$('#saveInfo').click(function() {
+    let userName = $('#userName').val();
+    let userEmail = $('#userEmail').val();
+    // let userOccupation = $('#userOccupation').val();
+
+    // Requête pour mettre à jour les informations de l'utilisateur
+    fetch('http://localhost:5027/Users/EditInformation', {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + localStorage.getItem('authToken')
+        },
+        body: JSON.stringify({ nom: userName, email: userEmail})
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Profile updated:', data);
+
+        // Mise à jour des informations dans le Summary après sauvegarde
+        $('#summaryName').text(userName);
+        $('#summaryEmail').text(userEmail);
+        // $('#summaryOccupation').text(userOccupation);
+
+        // Fermer le modal après la sauvegarde
+        $('#editInfoModal').modal('hide');
+    })
+    .catch(error => console.error('Erreur lors de la mise à jour des informations:', error));
+});
+
+        // Redirection lors du clic sur "Logout"
+        $('#logout').click(function() {
+            // Supprimer les données de session (par exemple token)
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('userEmail');
+            localStorage.removeItem('userName');
+            localStorage.removeItem('userRole');
+            window.location.href = 'index.html';
+        });
+
+        // Sauvegarde des informations modifiées dans le modal "Edit Login"
+        $('#saveLogin').click(function() {
+            let oldPassword = $('#oldPassword').val();
+            let newPassword = $('#newPassword').val();
+            let confirmPassword = $('#confirmPassword').val();
+
+            // Requête pour mettre à jour les informations de connexion de l'utilisateur
+            fetch('http://localhost:5027/Users/EditPassword', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + localStorage.getItem('authToken')
+                },
+                body: JSON.stringify({ oldPassword, newPassword, confirmPassword })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Login info updated:', data);
+                $('#editLoginModal').modal('hide');
+                // Déconnecter l'utilisateur après modification du login
+                $('#logout').trigger('click');
+            });
+        });
+
+        // Gestion de l'affichage des sections en fonction du clic sur le menu
+        $('.navbar-nav a').click(function(e) {
+            e.preventDefault();  // Empêche le comportement par défaut du lien
+
+            const sectionToShow = $(this).attr('href').substring(1);  // Récupère l'ID sans #
+            afficherSection(sectionToShow);  // Appel de la fonction pour afficher la section
+        });
+
+        // Fonction pour afficher une section et changer le titre
+        function afficherSection(sectionId, titre) {
+            // Cacher toutes les sections
+            $('.page-section').each(function() {
+                $(this).hide().removeClass('active');
+            });
+
+            // Afficher la section sélectionnée
+            $('#' + sectionId).show().addClass('active');
+
+            // Mettre à jour le titre en fonction de la section
+            $('.animated-title').text(titre);
+
+    }
+
+        // Clic sur le lien "Dashboard"
+        $('a[href="#dashboard-section"]').click(function() {
+            afficherSection('dashboard-section', 'Welcome to Your Dashboard');
+        });
+
+        // Clic sur le lien "My Favorite Offers"
+        $('a[href="#my-favorite-offers-section"]').click(function() {
+            afficherSection('my-favorite-offers-section', 'My Favorite Offers');
+        });
+
+        // Clic sur le lien "My Applications"
+        $('a[href="#my-applications-section"]').click(function() {
+            afficherSection('my-applications-section', 'My Applications');
+        });
+
+        // Bloquer la propagation de l'événement de clic pour le bouton Delete
+        $(document).on('click', '.delete-offer', function(event) {
+            event.preventDefault(); // Empêche le comportement par défaut du bouton
+            event.stopPropagation(); // Empêche l'événement de se propager à la carte entière
+
+            // Supprimer l'offre (le parent direct du bouton delete)
+            const offerId = $(this).closest('.job-card').data('id');
+            $(this).closest('.job-card').remove();
+
+            // Supprimer l'offre via l'API
+            fetch(`/api/user/delete-favorite/${offerId}`, { method: 'DELETE' })
+            .then(() => {
+                console.log('Offer deleted');
+            });
+        });
+
+        // Rendre la carte d'offre cliquable pour ouvrir le modal de détails
+        $(document).on('click', '.job-card', function() {
+            const jobTitle = $(this).find('h5').text();
+            const jobCompanyLocation = $(this).find('p:nth-of-type(1)').text();
+            const [jobCompany, jobLocation] = jobCompanyLocation.split(', ');
+            const jobSalary = $(this).find('.salary').text();
+            const jobPosted = $(this).find('small').text();
+            const jobDescription = "Description complète du poste ici."; // Description statique
+
+            // Mise à jour du modal avec les détails de l'offre
+            $('#jobTitle').text(jobTitle);
+            $('#jobCompany').text(jobCompany);
+            $('#jobLocationDetails').text(jobLocation);
+            $('#jobSalary').text(jobSalary);
+            $('#jobPosted').text(jobPosted);
+            $('#jobDescription').text(jobDescription);
+
+            $('#jobDetailsModal').modal('show');
+        });
+
+// Ouvrir le modal des détails de l'offre
+$(document).on('click', '.job-card', function() {
+    const jobId = $(this).data('id'); // Récupère l'ID de l'offre
+    const jobTitle = $(this).find('h5').text();
+    const jobCompanyLocation = $(this).find('p:nth-of-type(1)').text();
+    const [jobCompany, jobLocation] = jobCompanyLocation.split(', ');
+    const jobSalary = $(this).find('.salary').text();
+    const jobPosted = $(this).find('small').text();
+
+    // Mettre à jour les détails du modal
+    $('#jobTitle').text(jobTitle);
+    $('#jobCompany').text(jobCompany);
+    $('#jobLocationDetails').text(jobLocation);
+    $('#jobSalary').text(jobSalary);
+    $('#jobPosted').text(jobPosted);
+
+
+    // Associer l'ID de l'offre au modal
+    $('#jobDetailsModal').data('job-id', jobId);
+
+    $('#jobDetailsModal').modal('show');
+});
+
+    // Envoyer la candidature via Fetch API
+    fetch('/api/user/apply', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + localStorage.getItem('authToken')
+        },
+        body: JSON.stringify({
+            jobId: jobId  // ID de l'offre à laquelle l'utilisateur postule
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Candidature soumise:', data);
+        $('#applyModal').modal('hide');
+        alert('Votre candidature a été soumise avec succès !');
+    })
+    .catch(error => {
+        console.error('Erreur lors de la soumission de la candidature:', error);
+        alert('Une erreur est survenue lors de la soumission de votre candidature.');
+    });
+});
+
+
+ // Requête Fetch pour récupérer les offres favorites de l'utilisateur
+const fetchFavoriteOffers = () => {
+    fetch('http://localhost:5027/FavoriteOffers/favorite-offers', {
+        method: 'GET',
+        headers: {
+            'Authorization': 'Bearer ' + localStorage.getItem('authToken')
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        let favoriteOffers = data.offers;
+        $('#my-favorite-offers-section').empty(); // Vider la section avant de l'injecter à nouveau
+        favoriteOffers.forEach(offer => {
+            // Injecter les offres dans le DOM
+            $('#my-favorite-offers-section').append(`
+                <div class="job-card" data-id="${offer.id}">
+                    <h5>${offer.title}</h5>
+                    <p>${offer.companyName}, ${offer.location}</p>
+                    <p class="salary">${offer.salary}</p>
+                    <small>${new Date(offer.postedDate).toLocaleDateString()}</small>
+                    <button class="delete-offer btn btn-danger">
+                        <i class="fas fa-trash"></i> Delete
+                    </button>
+                </div>
+            `);
+        });
+    })
+    .catch(error => console.error('Erreur lors de la récupération des offres favorites:', error));
+};
+
+// Supprimer une offre favorite
+$(document).on('click', '.delete-offer', function(e) {
+    e.preventDefault();
+    const offerId = $(this).closest('.job-card').data('id'); // Récupérer l'ID de l'offre
+    const jobCard = $(this).closest('.job-card');
+
+    
+    // Requête Fetch pour supprimer l'offre favorite
+    fetch(`http://localhost:5027/FavoriteOffers/remove-favorite/${offerId}`, {
+        method: 'DELETE',
+        headers: {
+            'Authorization': 'Bearer ' + localStorage.getItem('authToken')
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Offre favorite supprimée:', data);
+        jobCard.remove(); // Supprimer la carte du DOM
+    })
+    .catch(error => console.error('Erreur lors de la suppression de l\'offre favorite:', error));
+});
+
+        // Requête Fetch pour récupérer les offres auxquelles l'utilisateur a postulé
+        const fetchAppliedOffers = () => {
+    fetch('http://localhost:5027/Candidatures/GetCandidatures', {
+        headers: {
+            'Authorization': 'Bearer ' + localStorage.getItem('authToken') // si votre API nécessite une authentification
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data && Array.isArray(data)) {
+            let appliedOffers = data;
+            $('#my-applications-section').empty(); // Clear previous results
+            appliedOffers.forEach(offer => {
+                $('#my-applications-section').append(`
+                    <div class="job-card" data-id="${offer.id}">
+                        <h5>${offer.title}</h5>
+                        <p>${offer.companyName}, ${offer.location}</p>
+                        <p class="salary">${offer.salary}</p>
+                        <small>${new Date(offer.postedDate).toLocaleDateString()}</small>
+                    </div>
+                `);
+            });
+        } else {
+            console.error('Offers array is missing or not an array');
+        }
+    })
+    .catch(error => console.error('Fetch error:', error));
+};
+
+// Appel de la fonction pour récupérer les candidatures
+fetchAppliedOffers();
+
+
+
+
+        // Requête Fetch pour afficher le nombre d'applications soumises et d'offres favorites
+        const fetchDashboardData = () => {
+            fetch('http://localhost:5027/Candidats/GetAllHistorics',{
+                method: 'GET',
+                headers:{
+                    'Authorization': 'Bearer ' + localStorage.getItem('authToken'),
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                $('#applications-count').text(data.applicationsCount);
+                $('#favorite-count').text(data.favoriteOffersCount);
+            });
+        };
+
+        // Appels initiaux pour charger les données
+        fetchFavoriteOffers();
+        fetchAppliedOffers();
+        fetchDashboardData();
+
+    document.getElementById('darkModeToggle').addEventListener('click', function() {
+        document.body.classList.toggle('dark-mode');
+    });
+    document.getElementById('jobOffersBtn').addEventListener('click', function() {
+        window.location.href = 'job-offers.html';
+    });
+</script>
+</body>
+</html>

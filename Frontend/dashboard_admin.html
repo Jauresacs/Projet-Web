@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cssanimation.io/css/library.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/hover.css/2.3.1/css/hover-min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            /* Couleurs pour le mode clair */
+            --background-color: #ffffff;
+            --text-color: #333333;
+            --card-bg-color: #f9f9f9;
+            --primary-color: #007bff;
+            --accent-color: #28a745;
+        }
+
+        .dark-mode {
+            /* Couleurs pour le mode sombre */
+            --background-color: #121212;
+            --text-color: #f1f1f1;
+            --card-bg-color: #1e1e1e;
+            --primary-color: #0066ff;
+            --accent-color: #03dac6;
+        }
+
+        /* Appliquer les couleurs */
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+
+        .job-card {
+            background-color: var(--card-bg-color);
+            color: var(--text-color);
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--accent-color);
+        }
+         /* Style pour le mode sombre */
+         #darkModeToggle {
+            border: 1px solid #343a40;
+            color: #343a40;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        #darkModeToggle:hover {
+            background-color: #343a40;
+            color: #fff;
+        }
+
+        .navbar .btn {
+            margin-left: 10px;
+        }
+        /* Style pour le texte animé "Welcome" */
+        .animated-title {
+            font-weight: 700;
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeIn 1.5s ease-in-out infinite alternate;
+        }
+
+        /* Espacement ajouté au-dessus du titre */
+        h1.animated-title {
+            margin-top: 60px;
+        }
+
+        /* Animation pour le titre */
+        @keyframes fadeIn {
+            0% { opacity: 0.6; }
+            100% { opacity: 1; }
+        }
+
+        /* Centrage et animation des titres des boîtes */
+        .box h4 {
+            text-align: center;
+            color: #007bff;
+            animation: leWaterWave 0.5s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        /* Conteneur principal pour les boîtes */
+        .dashboard-container {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 60px;
+            height: auto;
+        }
+
+        /* Style des boîtes avec gradient animé et effet de débordement d'énergie */
+        .box {
+            background: linear-gradient(45deg, #fefdfe, #cddbf3);
+            background-size: 400% 400%;
+            animation: gradientBackground 8s ease infinite;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            flex: 1;
+            max-width: 28%;
+            min-height: 270px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+        /* Animation de gradient pour les boîtes */
+        @keyframes gradientBackground {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Effet de débordement d'énergie */
+        .box::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 20px;
+            padding: 2px;
+            background: linear-gradient(45deg, #0e0e0e, #0364dc);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask-composite: exclude;
+            transition: opacity 0.5s ease;
+            opacity: 0;
+        }
+
+        .box:hover::before {
+            opacity: 1;
+        }
+
+        /* Animation pour les boîtes */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .box {
+            animation: fadeInUp 0.8s ease-in-out;
+        }
+
+        /* Animation Water Wave */
+        @keyframes leWaterWave {
+            50% { 
+                transform: skewY(1deg) skewX(-1deg) scale(1.06); 
+            }
+        }
+
+        .water-wave {
+            display: inline-block;
+            animation: leWaterWave 0.5s linear infinite;
+        }
+
+        /* Ajustement des éléments dans la section Overview */
+        .overview-box ul {
+            list-style: none;
+            padding: 0;
+            text-align: left;
+            margin-top: 10px;
+        }
+
+        .overview-box ul li {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .overview-box ul li strong {
+            flex-shrink: 0;
+        }
+
+        .overview-box ul li span {
+            flex-grow: 1;
+            text-align: right;
+        }
+
+        /* Style des boutons avec icônes */
+        .btn i {
+            margin-right: 8px;
+            font-size: 1.2rem;
+            vertical-align: middle;
+        }
+
+        /* Assurer que l’icône et le texte soient centrés */
+        .btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Effet hover pour les boutons */
+        .btn-primary:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+
+        /* Ajustement pour espacement */
+        .box ul li strong::after {
+            content: " ";
+            margin-right: 5px;
+        }
+
+        /* Remettre la couleur des icônes en bleu */
+        .box i {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: #007bff;
+        }
+/* Style des boîtes avec gradient animé et débordement d'énergie */
+.box {
+    background: linear-gradient(45deg, #fefdfe, #73a2f5);
+    background-size: 400% 400%;
+    animation: gradientBackground 8s ease infinite;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    flex: 1;
+    max-width: 28%;
+    min-height: 270px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+}
+
+/* Effet de débordement animé continu */
+.box::before {
+    content: "";
+    position: absolute;
+    top: 0; 
+    left: 0; 
+    right: 0; 
+    bottom: 0;
+    border-radius: 20px;
+    background: linear-gradient(45deg, #101010, #f9f9f9, #007bff, #00b3ff);
+    background-size: 200% 200%;
+    z-index: -1;
+    animation: borderFlow 3s linear infinite;
+}
+
+/* Animation de déplacement du gradient */
+@keyframes borderFlow {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* Animation de gradient pour les boîtes */
+@keyframes gradientBackground {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+/* Ajout d'un gradient animé pour les icônes */
+.box i {
+    font-size: 2rem;
+    margin-bottom: 10px;
+    background: linear-gradient(45deg, #0084ff, #2b2b2b, #049ff3, #060606);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 200% 200%;
+    animation: iconGradient 3s linear infinite;
+}
+
+/* Animation du gradient pour les icônes */
+@keyframes iconGradient {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+nav {
+    display: flex;
+    justify-content: space-around;
+    margin: 20px 0;
+    border-radius: 10px;
+    padding: 10px;
+    }
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+nav a {
+    position: relative;
+    font-size: 1.2rem;
+    color: #000;
+    text-decoration: none;
+    padding: 10px 15px;
+    background: linear-gradient(45deg, #000000, #00a6ff);
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    transition: background-position 0.5s, background-color 0.3s;
+}
+
+nav a::before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: rgba(0, 123, 255, 0.1);
+    border-radius: 5px;
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.3s, background-color 0.3s;
+}
+
+nav a:hover::before {
+    opacity: 1;
+    background-color: rgba(0, 123, 255, 0.2);
+}
+
+nav a i {
+    margin-right: 8px;
+    transition: transform 0.5s;
+}
+
+nav a:hover i {
+    transform: rotate(360deg);
+}
+
+@media only screen and (max-width: 767px) {
+    .dashboard-container {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .box {
+        max-width: 100%;
+        padding: 20px;
+    }
+
+    nav {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    nav a {
+        padding: 8px 10px;
+        font-size: 1rem;
+    }
+}
+
+/* Styles pour les tablettes */
+@media (min-width: 768px) and (max-width: 1024px) {
+    .dashboard-container .box {
+      flex: 0 0 90%;
+      max-width: 90%;
+      margin: 20px auto;
+    }
+  }
+
+.page-section {
+    display: none;
+}
+.page-section.active {
+    display: block;
+}
+/* Style de la carte d'offre */
+.job-card {
+    margin-bottom: 20px;
+    padding: 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    position: relative;
+    transition: transform 0.3s ease;
+    animation: fadeInUp 1s ease-in-out;
+}
+
+.job-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Animation pour les cartes d'offre */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Style des titres des offres */
+.job-card h5 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #007bff;
+    margin-bottom: 10px;
+}
+
+/* Style de l'entreprise et de la localisation */
+.job-card p {
+    font-size: 1.1rem;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+/* Style du salaire */
+.job-card p:nth-of-type(2) {
+    font-size: 1.3rem;
+    color: #28a745;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+/* Style de la date de publication */
+.job-card small {
+    font-size: 0.9rem;
+    color: #999;
+}
+
+/* Bouton pour les favoris ajouter ou supprimer */
+.btn-favorite {
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    color: #aaa;
+}
+
+.favorited {
+    color: red;
+}
+
+/* Bouton pour la suppression */
+.delete-container {
+    text-align: right;
+    margin-top: -10px;
+}
+
+.delete-offer {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.delete-offer i {
+    font-size: 1rem;
+}
+
+.delete-offer:hover {
+    background-color: #b92b3a;
+}
+
+/* Style des éléments de pagination */
+.pagination {
+    margin-top: 20px;
+}
+
+.page-item.active .page-link {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.page-link {
+    color: #007bff;
+}
+
+.page-link:hover {
+    background-color: #0056b3;
+    color: #fff;
+}
+
+/* Modal pour les détails de l'offre */
+.modal-header {
+    background-color: #007bff;
+    color: white;
+}
+
+.modal-title {
+    font-weight: bold;
+}
+
+.modal-body h5 {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #007bff;
+    margin-bottom: 10px;
+}
+
+.modal-body p {
+    font-size: 1.1rem;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.modal-body button {
+    background-color: #28a745;
+    color: white;
+}
+
+/* Styles du modal pour postuler */
+#applyModal .modal-header {
+    background-color: #28a745;
+    color: white;
+}
+
+#applyModal .modal-body label {
+    font-weight: bold;
+}
+
+#applyModal .modal-body input,
+#applyModal .modal-body button {
+    margin-bottom: 10px;
+}
+
+#applyModal .modal-body button {
+    background-color: #007bff;
+    color: white;
+}
+/* Style de la liste des activités récentes */
+#recent-activities {
+    list-style-type: none;
+    padding: 0;
+}
+
+#recent-activities li {
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+    font-size: 0.9rem;
+    color: #333;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Style pour une activité de connexion */
+.activity-login {
+    color: #28a745;
+    font-weight: bold;
+}
+
+/* Style pour une activité de déconnexion */
+.activity-logout {
+    color: #dc3545; 
+    font-weight: bold;
+}
+
+/* Ajout de marges entre les champs du modal */
+.modal-body .form-control {
+    margin-bottom: 15px;
+}
+
+.card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    transition: box-shadow 0.3s ease;
+}
+
+.card:hover {
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.card-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.card-text {
+    font-size: 1.1rem;
+    color: #666;
+}
+</style>
+</head>
+<body>
+    <div class="container-fluid">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="#">Job Board</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#dashboard-section">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#annonces-section">Annonces</a> 
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#users-section">Users</a> 
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#companies-section">Compagnies</a> 
+                    </li>
+                </ul>       
+               <button id="darkModeToggle" class="btn btn-outline-dark my-2 my-sm-0 mr-2 hvr-grow">
+                    <i class="fas fa-adjust"></i> Dark Mode
+                </button>
+                <button class="btn btn-outline-danger my-2 my-sm-0 hvr-wobble-vertical" id="logout"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            </div>
+        </nav>
+
+        <h1 class="animated-title animate__animated animate__bounceIn">Welcome to Your Dashboard</h1>
+
+        <div id="dashboard-section" class="page-section active">
+            <div class="dashboard-container" data-aos="fade-up">
+
+                <!-- Boîte Summary -->
+                <div class="box hvr-grow">
+                    <i class="fas fa-user-shield"></i>
+                    <h4 class="water-wave">Summary</h4>
+                    <p><strong>Name:</strong> <span id="summaryName"></span></p>
+                    <p><strong>Email:</strong> <span id="summaryEmail"></span></p>
+                    <p><strong>Role:</strong> Admin</p>
+                </div>
+                
+                <!-- Boîte Overview pour l'admin -->
+                <div class="box hvr-grow">
+                    <i class="fas fa-chart-line"></i>
+                    <h4 class="water-wave">Overview</h4>
+                    <ul>
+                        <li><strong>Total Users:</strong> <span id="total-users-count">0</span></li>
+                        <li><strong>Total Job Offers:</strong> <span id="total-job-offers-count">0</span></li>
+                    </ul>
+                </div>
+
+                <!-- Boîte Recent Activities -->
+                <div class="box hvr-grow">
+                    <i class="fas fa-bell"></i>
+                    <h4 class="water-wave">Recent Activities</h4>
+                    <div id="recent-activities">
+                        <p>No recent activities to show</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+ <!-- Section Annonces -->
+<div id="annonces-section" class="page-section">
+    <button class="btn btn-primary mt-2 hvr-grow" id="postJobOfferBtn" data-toggle="modal" data-target="#postJobOfferModal">
+        Post a Job Offer
+    </button>
+    <div class="filter mt-3">
+        <label for="filterCategory">Filter by Category:</label>
+        <select class="form-control" id="filterCategory">
+            <option value="All">All Categories</option>
+            <option value="IT">IT</option>
+            <option value="Finance">Finance</option>
+            <option value="Marketing">Marketing</option>
+            <option value="Design">Design</option>
+            <option value="Sales">Sales</option>
+        </select>
+    </div>
+
+    <!-- Liste des annonces publiées -->
+    <div id="posted-offers-list" class="mt-3">
+        <p>No job offers posted yet</p>
+    </div>
+</div>
+
+<!-- Section Utilisateurs -->
+<div id="users-section" class="page-section">
+    <!-- Onglets pour candidats et recruteurs -->
+    <ul class="nav nav-tabs" id="userTabs" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="candidates-tab" data-toggle="tab" href="#candidates" role="tab" aria-controls="candidates" aria-selected="true">Candidates</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="recruiters-tab" data-toggle="tab" href="#recruiters" role="tab" aria-controls="recruiters" aria-selected="false">Recruiters</a>
+        </li>
+    </ul>
+
+    <!-- Contenu des onglets -->
+    <div class="tab-content mt-3" id="userTabsContent">
+        <div class="tab-pane fade show active" id="candidates" role="tabpanel" aria-labelledby="candidates-tab">
+            <div class="search-bar mb-3">
+                <input type="text" id="searchCandidates" class="form-control" placeholder="Search candidates by name or email...">
+            </div>
+            <div id="candidates-list">
+                <p>No candidates found</p>
+            </div>
+        </div>
+
+        <!-- Onglet Recruteurs -->
+        <div class="tab-pane fade" id="recruiters" role="tabpanel" aria-labelledby="recruiters-tab">
+            <div class="search-bar mb-3">
+                <input type="text" id="searchRecruiters" class="form-control" placeholder="Search recruiters by name or email...">
+            </div>
+            <div id="recruiters-list">
+                <p>No recruiters found</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Section Entreprises -->
+<div id="companies-section" class="page-section">
+    <div class="search-bar mb-3">
+        <input type="text" id="searchCompanies" class="form-control" placeholder="Search companies by name...">
+    </div>
+    <div id="companies-list">
+        <p>No companies found</p>
+    </div>
+</div>
+               <!-- Modal pour les détails de l'offre -->
+               <div class="modal fade" id="jobDetailsModal" tabindex="-1" role="dialog" aria-labelledby="jobDetailsLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="jobDetailsLabel">Job Details</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <h5 id="jobTitleModal">Job Title</h5>
+                            <p><strong>Company:</strong> <span id="jobCompanyModal"></span>, <span id="jobLocationDetails"></span></p>
+                            <p><strong>Category:</strong> <span id="jobCategoryModal">Category</span></p>
+                            <p><strong>Job Type:</strong> <span id="jobTypeModal">Job Type</span></p>
+                            <p><strong>Salary:</strong> <span id="jobSalaryModal">Salary</span></p>
+                            <p><strong>Posted:</strong> <span id="jobPostedModal">Posted Date</span></p>
+                            <p id="jobDescriptionModal">Complete job description here.</p>
+                            <button id="applyButton" class="btn btn-success mt-3" data-toggle="modal" data-target="#applyModal">Apply for this job</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+                <!-- Modal pour publier une nouvelle offre -->
+                <div class="modal fade" id="postJobOfferModal" tabindex="-1" aria-labelledby="postJobOfferModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="postJobOfferModalLabel">Create a New Job Offer</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="postJobOfferForm">
+                                    <div class="form-group">
+                                        <label for="jobTitle">Job Title</label>
+                                        <input type="text" class="form-control" id="jobTitle" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="jobCompany">Company</label>
+                                        <select class="form-control" id="jobCompany" required>
+                                            </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="jobLocation">Location</label>
+                                        <input type="text" class="form-control" id="jobLocation" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="jobSalary">Salary</label>
+                                        <input type="text" class="form-control" id="jobSalary" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="jobCategory">Category</label>
+                                        <select class="form-control" id="jobCategory" required>
+                                      
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="jobType">Job Type</label>
+                                        <select class="form-control" id="jobType" required>
+                                          
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="jobDescription">Description</label>
+                                        <textarea class="form-control" id="jobDescription" rows="3" required></textarea>
+                                    </div>
+                                    <button type="submit" class="btn btn-success">Publish Offer</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+    <!-- Modal pour les détails du candidat -->
+<div class="modal fade" id="candidateDetailsModal" tabindex="-1" role="dialog" aria-labelledby="candidateDetailsLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="candidateDetailsLabel">Candidate Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Name:</strong> <span id="candidateModalName"></span></p>
+                <p><strong>Email:</strong> <span id="candidateModalEmail"></span></p>
+                <p><strong>Job Title:</strong> <span id="candidateModalJobTitle"></span></p>
+                <p><strong>CV:</strong> <a href="#" id="candidateModalCV" target="_blank">Download CV</a></p>
+                <p><strong>Cover Letter:</strong> <a href="#" id="candidateModalCoverLetter" target="_blank">Download Cover Letter</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5.7/lib/darkmode-js.min.js"></script>
+    <script>
+        AOS.init();
+    
+        $(document).ready(function () {
+
+        // Charger les informations de l'admin et les afficher dans la section Summary
+        function loadAdminInfo() {
+            fetch('http://localhost:5027/Users/GetUser', {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('authToken')
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                $('#summaryName').text(data.nom);
+                $('#summaryEmail').text(data.email);
+            })
+            .catch(error => console.error('Error loading admin info:', error));
+        }
+
+        loadAdminInfo();
+
+        // Charger les statistiques pour la section Overview
+        function loadOverviewStats() {
+            fetch('http://localhost:5027/Admin/GetCount', {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('authToken')
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                $('#total-users-count').text(data.totalUsers);
+                $('#total-job-offers-count').text(data.totalJobOffers);
+            })
+            .catch(error => console.error('Error loading overview stats:', error));
+        }
+
+        loadOverviewStats();
+
+    fetch('http://localhost:5027/Jobs/GetJobFilters', {
+        method: 'GET',
+        headers: {
+            'Authorization': 'Bearer ' + localStorage.getItem('authToken')
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        const categorySelect = document.getElementById('jobCategory');
+        const jobTypeSelect = document.getElementById('jobType');
+        const jobCompany = document.getElementById('jobCompany');
+
+        // Remplir la liste des catégories
+        data.categories.forEach(category => {
+            const option = document.createElement('option');
+            option.value = category;
+            option.textContent = category;
+            categorySelect.appendChild(option);
+        });
+
+        // Remplir la liste des types de job
+        data.jobTypes.forEach(jobType => {
+            const option = document.createElement('option');
+            option.value = jobType;
+            option.textContent = jobType;
+            jobTypeSelect.appendChild(option);
+        });
+        data.company.forEach(c => {
+            const option = document.createElement('option');
+            option.value = c;
+            option.textContent = c;
+            jobCompany.appendChild(option);
+        });
+    })
+    .catch(error => console.error('Error fetching job filters:', error));
+
+
+            // Charger les offres depuis l'API
+            function loadJobOffers() {
+                fetch('http://localhost:5027/Jobs/GetAllOffers', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': 'Bearer ' + localStorage.getItem('authToken')
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    $('#posted-offers-list').html('');
+                    data.forEach(offer => {
+                        addJobToSection('posted-offers-list', offer.title, offer.companyName, offer.location, offer.salary, offer.category, offer.jobType, offer.description, offer.postedDate, offer.id);
+                    });
+                })
+                .catch(error => console.error('Error fetching job offers:', error));
+            }
+    
+            loadJobOffers();
+    
+            // Filtrer les offres par catégorie
+            $('#filterCategory').change(function () {
+                const selectedCategory = $(this).val();
+                const url = selectedCategory === "All" ? '/api/admin/job-offers' : `/api/admin/job-offers?category=${selectedCategory}`;
+    
+                fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': 'Bearer ' + localStorage.getItem('authToken')
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    $('#posted-offers-list').html('');
+                    if (data.length > 0) {
+                        data.forEach(offer => {
+                            addJobToSection('posted-offers-list', offer.title, offer.companyName, offer.location, offer.salary, offer.category, offer.jobType, offer.description, offer.postedDate, offer.id);
+                        });
+                    } else {
+                        $('#posted-offers-list').html('<p>No job offers found for this category</p>');
+                    }
+                })
+                .catch(error => console.error('Error filtering job offers:', error));
+            });
+    
+            // Ajouter une annonce à la liste affichée
+                   function addJobToSection(sectionId, jobTitle, jobCompany, jobLocation, jobSalary, jobCategory, jobType, jobDescription,postedDate, id) {
+                const jobList = document.getElementById(sectionId);
+                const offerHTML = `
+                <div class="job-card hvr-grow" style="position: relative;" data-id="${id}" data-title="${jobTitle}" 
+                    data-company="${jobCompany}" data-location="${jobLocation}" data-salary="${jobSalary}" 
+                    data-category="${jobCategory}" data-type="${jobType}" data-description="${jobDescription}" 
+                    data-posted="${new Date().toLocaleDateString()}">
+                    <h5 class="job-title"><a href="#">${jobTitle}</a></h5>
+                    <p class="job-company">${jobCompany} - ${jobLocation}</p>
+                    <p class="job-salary">${jobSalary} €</p>
+                    <small>Posted on ${postedDate}</small>
+                    <button class="btn btn-danger delete-offer">Delete</button>
+                </div>
+                `;
+                jobList.insertAdjacentHTML('beforeend', offerHTML);
+            }
+    
+            // Gérer le clic sur une offre pour afficher le modal
+            $('#posted-offers-list').on('click', '.job-card', function () {
+                const jobCard = $(this);
+                $('#jobTitleModal').text(jobCard.data('title'));
+                $('#jobCompanyModal').text(jobCard.data('company'));
+                $('#jobLocationDetails').text(jobCard.data('location'));
+                $('#jobSalaryModal').text(jobCard.data('salary'));
+                $('#jobCategoryModal').text(jobCard.data('category'));
+                $('#jobTypeModal').text(jobCard.data('type'));
+                $('#jobDescriptionModal').text(jobCard.data('description'));
+                $('#jobPostedModal').text(jobCard.data('posted'));
+    
+                $('#jobDetailsModal').modal('show');
+            });
+
+            $('#postJobOfferForm').submit(function (e) {
+    e.preventDefault();
+
+    // URL pour la requête POST
+    const url = 'http://localhost:5027/Admin/addJob';
+
+    // Récupérer les données du formulaire
+    const newJob = {
+        title: $('#jobTitle').val(),
+        companyName: $('#jobCompany').val(),
+        location: $('#jobLocation').val(),
+        salary: $('#jobSalary').val(),
+        category: $('#jobCategory').val(),
+        jobType: $('#jobType').val(),
+        description: $('#jobDescription').val()
+    };
+
+    // Faire la requête POST
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + localStorage.getItem('authToken')
+        },
+        body: JSON.stringify(newJob)
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Erreur lors de l\'ajout de l\'offre');
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Offre ajoutée avec succès:', data);
+        $('#postJobOfferModal').modal('hide'); 
+        $('#postJobOfferForm')[0].reset(); 
+        loadJobOffers(); 
+    })
+    .catch(error => {
+        console.error('Erreur:', error);
+    });
+});
+
+    
+            // Simuler la suppression d'une annonce via l'API
+            $('#posted-offers-list').on('click', '.delete-offer', function (e) {
+                e.stopPropagation();
+                const jobCard = $(this).closest('.job-card');
+                const jobId = jobCard.data('id');
+    
+                fetch(`http://localhost:5027/Admin/Delete/${jobId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': 'Bearer ' + localStorage.getItem('authToken')
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Offer deleted:', data);
+                    jobCard.remove();
+                 
+                })
+                .catch(error => console.error('Error deleting offer:', error));
+            });
+    
+            // Charger les utilisateurs depuis l'API
+            function loadUsers(userType, listElement) {
+                const url = `http://localhost:5027/Admin/GetAllUsers?type=${userType}`;
+    
+                fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': 'Bearer ' + localStorage.getItem('authToken')
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    listElement.html('');
+                    data.forEach(user => {
+                        const userHTML = `
+                            <div class="user-card" data-id="${user.id}">
+                                <h5>${user.nom} (${user.email})</h5>
+                                <p><strong>Role:</strong> ${user.role}</p>
+                                <button class="btn btn-danger delete-user">Delete</button>
+                            </div>
+                        `;
+                        listElement.append(userHTML);
+                    });
+                })
+                .catch(error => console.error(`Error loading ${userType}:`, error));
+            }
+    
+            loadUsers('candidate', $('#candidates-list'));
+            loadUsers('recruiter', $('#recruiters-list'));
+    
+            // Charger les compagnies depuis l'API
+            function loadCompanies() {
+                fetch('http://localhost:5027/Admin/GetCompanies', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': 'Bearer ' + localStorage.getItem('authToken')
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    const companiesList = $('#companies-list');
+                    companiesList.html('');
+                    data.forEach(company => {
+                        addCompanyToList(companiesList, company);
+                    });
+                })
+                .catch(error => console.error('Error loading companies:', error));
+            }
+    
+            loadCompanies();
+    
+            // Ajouter une compagny à la liste
+            function addCompanyToList(listElement, company) {
+                const recruitersList = company.recruteurs.map(recruiter => `<li>${recruiter.user.nom} (${recruiter.user.email})</li>`).join('');
+                const companyHTML = `
+                    <div class="company-card" data-id="${company.id}">
+                        <h5>${company.name}</h5>
+                        <p><strong>Description:</strong> ${company.description}</p>
+                        <p><strong>Website:</strong> <a href="${company.siteWeb}" target="_blank">${company.siteWeb}</a></p>
+                        <p><strong>Address:</strong> ${company.adresse}</p>
+                        <h6>Recruiters:</h6>
+                        // <ul>${recruitersList}</ul>
+                        <button class="btn btn-danger delete-company">Delete Company</button>
+                    </div>
+                `;
+                listElement.append(companyHTML);
+            }
+    
+            // suppression d'une entreprise via l'API
+            $(document).on('click', '.delete-company', function () {
+                const companyId = $(this).closest('.company-card').data('id');
+    
+                fetch(`http://localhost:5027/Admin/delete-company/${companyId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': 'Bearer ' + localStorage.getItem('authToken')
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Company deleted:', data);
+                    $(this).closest('.company-card').remove();
+                })
+                .catch(error => console.error('Error deleting company:', error));
+            });
+    
+            // Filtrer les compagnies
+            $('#searchCompanies').on('keyup', function () {
+                const searchTerm = $(this).val().toLowerCase();
+                $('#companies-list .company-card').each(function () {
+                    const companyName = $(this).find('h5').text().toLowerCase();
+                    $(this).toggle(companyName.includes(searchTerm));
+                });
+            });
+            
+            // Filtrer les candidats et recruteurs
+            $('#searchCandidates').on('keyup', function() {
+                const searchTerm = $(this).val().toLowerCase();
+                $('#candidates-list .user-card').each(function() {
+                    const userName = $(this).find('h5').text().toLowerCase();
+                    $(this).toggle(userName.includes(searchTerm));
+                });
+            });
+        
+            $('#searchRecruiters').on('keyup', function() {
+                const searchTerm = $(this).val().toLowerCase();
+                $('#recruiters-list .user-card').each(function() {
+                    const userName = $(this).find('h5').text().toLowerCase();
+                    $(this).toggle(userName.includes(searchTerm));
+                });
+            });
+            
+            // Gestion du mode sombre
+            $('#darkModeToggle').click(function() {
+                $('body').toggleClass('dark-mode');
+            });
+    
+            // Gestion du logout
+            $('#logout').click(function() {
+                localStorage.removeItem('userToken');
+                window.location.href = 'index.html'; 
+            });
+            // Gestion de l'affichage des sections
+            $('.navbar-nav a').click(function(e) {
+                e.preventDefault();
+                const sectionToShow = $(this).attr('href').substring(1);
+                $('.animated-title').text(sectionToShow === "annonces-section" ? "Annonces" : "Dashboard");
+                afficherSection(sectionToShow);
+            });
+    
+            function afficherSection(sectionId) {
+                $('.page-section').hide();
+                $('#' + sectionId).show();
+            }   
+            
+            // suppression d'un utilisateur via l'API
+$(document).on('click', '.delete-user', function () {
+    const userId = $(this).closest('.user-card').data('id');
+
+    fetch(`http://localhost:5027/admin/delete-user/${userId}`, {
+        method: 'DELETE',
+        headers: {
+            'Authorization': 'Bearer ' + localStorage.getItem('authToken')
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('User deleted:', data);
+        $(this).closest('.user-card').remove(); // Suppression de l'élément du DOM
+    })
+    .catch(error => console.error('Error deleting user:', error));
+});
+
+            
+        });
+    </script>
+</body>
+</html>
